@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { dbConnect } from "../../../lib/mongodb";
+import dbConnect from "@/lib/mongodb";
 import User from "../../../models/User";
 
 export default async function handler(req, res) {

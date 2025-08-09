@@ -106,7 +106,7 @@ export default function ProjectsPage() {
           ) : (
             <div className="col-span-full text-center">
               <p className="text-gray-500 text-lg">
-                No projects found. Create a new one!
+                No Board found. Create a new one!
               </p>
             </div>
           )}
