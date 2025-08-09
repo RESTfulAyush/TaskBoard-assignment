@@ -14,80 +14,79 @@ const AddProjectModal = ({
 }) => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (edit && isModalOpen && id) {
-      const token = localStorage.getItem("token");
-      axios
-        .get(`/api/project/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          // Assuming API returns array with one project
-          if (res.data.length > 0) {
-            setTitle(res.data[0].title);
-            setDesc(res.data[0].description);
-          }
-        })
-        .catch(() => {
-          toast.error("Something went wrong while fetching project data");
-        });
+    if (isModalOpen) {
+      if (edit && id) {
+        const token = localStorage.getItem("token");
+        axios
+          .get(`/api/projects/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setTitle(res.data.title || "");
+            setDesc(res.data.description || "");
+          })
+          .catch(() => {
+            toast.error("Failed to fetch project data");
+            closeModal();
+          });
+      } else {
+        setTitle("");
+        setDesc("");
+      }
+    } else {
+      setTitle("");
+      setDesc("");
+      setLoading(false);
     }
-  }, [edit, isModalOpen, id]);
+  }, [edit, isModalOpen, id, closeModal]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+
     const token = localStorage.getItem("token");
-    console.log("token:", token);
     if (!token) {
       toast.error("You must be logged in");
       return;
     }
 
+    setLoading(true);
+
     const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     };
 
-    if (!edit) {
-      axios
-        .post("/api/projects", { title, description: desc }, config)
-        .then(() => {
-          closeModal();
-          onSuccess?.();
-          toast.success("Project created successfully");
-          setTitle("");
-          setDesc("");
-        })
-        .catch((error) => {
-          if (error.response?.status === 422) {
-            toast.error(
-              error.response.data.details?.[0]?.message || "Validation error"
-            );
-          } else {
-            toast.error("Something went wrong");
-          }
-        });
-    } else {
-      axios
-        .put(`/api/project/${id}`, { title, description: desc }, config)
-        .then(() => {
-          closeModal();
-          onSuccess?.();
-          toast.success("Project updated successfully");
-          setTitle("");
-          setDesc("");
-        })
-        .catch((error) => {
-          if (error.response?.status === 422) {
-            toast.error(
-              error.response.data.details?.[0]?.message || "Validation error"
-            );
-          } else {
-            toast.error("Something went wrong");
-          }
-        });
+    try {
+      if (edit && id) {
+        await axios.put(
+          `/api/projects/${id}`,
+          { title, description: desc },
+          config
+        );
+        toast.success("Board updated successfully");
+      } else {
+        await axios.post("/api/projects", { title, description: desc }, config);
+        toast.success("Board created successfully");
+      }
+      closeModal();
+      onSuccess?.();
+    } catch (error) {
+      if (error.response?.status === 422) {
+        toast.error(
+          error.response.data.details?.[0]?.message || "Validation error"
+        );
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,7 +95,7 @@ const AddProjectModal = ({
       <Dialog
         as="div"
         open={isModalOpen}
-        onClose={() => closeModal()}
+        onClose={closeModal}
         className="relative z-50"
       >
         <div className="fixed inset-0 overflow-y-auto">
@@ -121,23 +120,25 @@ const AddProjectModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="rounded-md bg-white w-6/12">
+              <Dialog.Panel className="rounded-md bg-white w-6/12 max-w-lg">
                 <Dialog.Title
                   as="div"
-                  className={
-                    "bg-white shadow px-6 py-4 rounded-t-md sticky top-0"
-                  }
+                  className="bg-white shadow px-6 py-4 rounded-t-md sticky top-0 relative flex justify-between items-center"
                 >
-                  {edit ? <h1>Edit Project</h1> : <h1>Create Project</h1>}
+                  <h1 className="text-gray-900 text-lg font-semibold">
+                    {edit ? "Edit Project" : "Create Project"}
+                  </h1>
                   <button
-                    onClick={() => closeModal()}
-                    className=" absolute right-6 top-4 text-gray-500 hover:bg-gray-100 rounded focus:outline-none focus:ring focus:ring-offset-1 focus:ring-indigo-200 "
+                    onClick={closeModal}
+                    className="absolute right-6 top-4 text-gray-500 hover:bg-gray-100 rounded focus:outline-none focus:ring focus:ring-offset-1 focus:ring-indigo-200"
+                    aria-label="Close modal"
+                    type="button"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className=" w-6 h-6"
+                      className="w-6 h-6"
                     >
                       <path
                         fillRule="evenodd"
@@ -147,39 +148,53 @@ const AddProjectModal = ({
                     </svg>
                   </button>
                 </Dialog.Title>
-                <form onSubmit={handleSubmit} className="gap-4 px-8 py-4">
+                <form
+                  onSubmit={handleSubmit}
+                  className="gap-4 px-8 py-4 flex flex-col"
+                >
                   <div className="mb-3">
                     <label htmlFor="title" className="block text-gray-600">
-                      Title
+                      Title <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="title"
+                      name="title"
+                      type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      type="text"
-                      className="border border-gray-300 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-offset-1 focus:outline-indigo-400"
-                      placeholder="Project title"
+                      required
+                      className="border border-gray-300 rounded-md text-gray-900 placeholder-gray-400 w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-offset-1 focus:outline-indigo-400"
+                      placeholder="Board title"
                     />
                   </div>
                   <div className="mb-2">
                     <label
-                      htmlFor="Description"
+                      htmlFor="description"
                       className="block text-gray-600"
                     >
                       Description
                     </label>
                     <textarea
+                      id="description"
+                      name="description"
                       value={desc}
                       onChange={(e) => setDesc(e.target.value)}
-                      className="border border-gray-300 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-offset-1 focus:outline-indigo-400"
+                      className="border border-gray-300 text-gray-900 placeholder-gray-400 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-offset-1 focus:outline-indigo-400"
                       rows="6"
-                      placeholder="Project description"
-                    ></textarea>
+                      placeholder="Board description"
+                    />
                   </div>
                   <div className="flex justify-end items-center space-x-2">
-                    <BtnSecondary onClick={() => closeModal()}>
+                    <BtnSecondary onClick={closeModal} type="button">
                       Cancel
                     </BtnSecondary>
-                    <BtnPrimary>Save</BtnPrimary>
+                    <BtnPrimary type="submit" disabled={loading}>
+                      {loading
+                        ? edit
+                          ? "Updating..."
+                          : "Creating..."
+                        : "Save"}
+                    </BtnPrimary>
                   </div>
                 </form>
               </Dialog.Panel>

@@ -12,7 +12,7 @@ export default function ProjectsPage() {
     axios
       .get("/api/projects", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust based on how you store token
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((res) => setProjects(res.data))
@@ -34,17 +34,30 @@ export default function ProjectsPage() {
     return { completedTasks, highPriorityTasks };
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
+
   return (
     <div className="min-h-screen p-8 bg-gradient-to-r from-white to-gray-250 relative">
       <div className="container mx-auto relative z-10">
         <div className="flex justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold text-gray-900">Your Projects</h1>
-          <button
-            onClick={openModal}
-            className="bg-emerald-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-emerald-600 transition-colors duration-300 ease-in-out"
-          >
-            + New Project
-          </button>
+          <h1 className="text-3xl font-bold text-gray-900">Your Boards</h1>
+          <div className="flex gap-4">
+            <button
+              onClick={openModal}
+              className="bg-emerald-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-emerald-600 transition-colors duration-300 ease-in-out"
+            >
+              + New Board
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-300 ease-in-out"
+            >
+              LogOut
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {projects.length > 0 ? (

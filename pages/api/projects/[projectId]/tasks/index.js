@@ -15,8 +15,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const project = await Project.findById(projectId, { task: 1, _id: 0 });
-      if (!project)
-        return res.status(404).json({ message: "Project not found" });
+      if (!project) return res.status(404).json({ message: "Board not found" });
       return res.status(200).json(project.task);
     } catch (err) {
       return res
@@ -37,8 +36,7 @@ export default async function handler(req, res) {
 
     try {
       const project = await Project.findById(projectId, { task: 1 });
-      if (!project)
-        return res.status(404).json({ message: "Project not found" });
+      if (!project) return res.status(404).json({ message: "Board not found" });
 
       const maxIndex =
         project.task.length > 0

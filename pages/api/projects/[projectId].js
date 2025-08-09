@@ -30,7 +30,7 @@ export default async function handler(req, res) {
         );
 
         if (!updatedProject)
-          return res.status(404).json({ message: "Project not found" });
+          return res.status(404).json({ message: "Board not found" });
 
         return res.status(200).json(updatedProject);
       } catch (error) {
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
         }).select("-__v -updatedAt");
 
         if (!project) {
-          return res.status(404).json({ message: "Project not found" });
+          return res.status(404).json({ message: "Board not found" });
         }
 
         // Group tasks by stage for easier column rendering
@@ -84,12 +84,10 @@ export default async function handler(req, res) {
         });
 
         if (deleted.deletedCount === 0) {
-          return res.status(404).json({ message: "Project not found" });
+          return res.status(404).json({ message: "Board not found" });
         }
 
-        return res
-          .status(200)
-          .json({ message: "Project deleted successfully" });
+        return res.status(200).json({ message: "Board deleted successfully" });
       } catch (error) {
         console.error("DELETE /api/projects/[projectId] error:", error);
         return res.status(500).json({ message: "Server error" });

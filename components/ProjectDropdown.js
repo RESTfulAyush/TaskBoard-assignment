@@ -16,7 +16,7 @@ const ProjectDropdown = ({ id, navigate }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.data.message === "Project deleted successfully") {
+      if (response.data.message === "Board deleted successfully") {
         toast.success("Record deleted successfully");
         navigate("/projects");
         document.dispatchEvent(new CustomEvent("projectUpdate"));
