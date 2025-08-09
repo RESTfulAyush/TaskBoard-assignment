@@ -1,4 +1,3 @@
-// pages/api/projects/[projectId]/tasks/index.js
 import dbConnect from "@/lib/mongodb";
 import Project from "@/models/Project";
 import mongoose from "mongoose";

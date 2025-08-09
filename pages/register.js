@@ -19,7 +19,7 @@ export default function RegisterPage() {
 
     if (res.ok) {
       localStorage.setItem("token", data.token);
-      router.push("/projects"); // ✅ changed
+      router.push("/projects");
     } else {
       alert(data.message);
     }

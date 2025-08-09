@@ -1,13 +1,9 @@
-// /api/projects/[projectId].js
-
 import dbConnect from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { authenticate } from "@/lib/auth";
 
 export default async function handler(req, res) {
   await dbConnect();
-  console.log("req:", req);
-
   const user = authenticate(req);
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -49,7 +45,6 @@ export default async function handler(req, res) {
           return res.status(404).json({ message: "Board not found" });
         }
 
-        // Group tasks by stage for easier column rendering
         const groupedTasks = {
           todo: (project.task || []).filter(
             (t) => t.stage.toLowerCase() === "to do"
@@ -76,8 +71,6 @@ export default async function handler(req, res) {
 
     case "DELETE":
       try {
-        console.log("delte", projectId);
-        console.log("user", user.id);
         const deleted = await Project.deleteOne({
           _id: projectId,
           user: user.id,

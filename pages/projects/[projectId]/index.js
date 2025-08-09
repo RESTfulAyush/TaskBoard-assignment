@@ -73,8 +73,6 @@ export default function Task() {
   const handleDelete = async (e, taskId) => {
     e.stopPropagation();
 
-    console.log("task id:", taskId);
-    console.log("project id:", projectId);
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");

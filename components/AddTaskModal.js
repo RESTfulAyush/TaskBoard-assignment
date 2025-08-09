@@ -18,7 +18,6 @@ const AddTaskModal = ({
   const [priority, setPriority] = useState("Medium");
   const [status, setStatus] = useState("To do");
 
-  // Reset form when modal closes or opens without edit mode
   useEffect(() => {
     if (!isAddTaskModalOpen) {
       setTitle("");
@@ -28,7 +27,6 @@ const AddTaskModal = ({
     }
   }, [isAddTaskModalOpen]);
 
-  // Fetch task data in edit mode
   useEffect(() => {
     if (edit && isAddTaskModalOpen && taskId && projectId) {
       axios

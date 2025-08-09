@@ -5,9 +5,6 @@ import joi from "joi";
 
 export default async function handler(req, res) {
   const { projectId, taskId } = req.query;
-  console.log("project id:", projectId);
-  console.log("task id:", taskId);
-  console.log("req:", req.method);
   await dbConnect();
 
   if (

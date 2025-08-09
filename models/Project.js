@@ -4,7 +4,7 @@ const ProjectSchema = new mongoose.Schema(
   {
     title: { type: String, unique: true },
     description: String,
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // 🔹 Link to user
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     task: [
       {
         id: Number,

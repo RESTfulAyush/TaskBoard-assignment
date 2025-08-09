@@ -6,7 +6,6 @@ import AddProjectModal from "./AddProjectModal";
 
 const ProjectDropdown = ({ id, navigate }) => {
   const token = localStorage.getItem("token");
-  console.log("id:", id);
   const [isModalOpen, setModalState] = useState(false);
 
   const handleDelete = async () => {

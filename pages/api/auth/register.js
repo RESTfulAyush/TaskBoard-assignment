@@ -1,4 +1,3 @@
-// pages/api/auth/register.js
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { dbConnect } from "../../../lib/mongodb";

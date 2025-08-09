@@ -1,4 +1,3 @@
-// components/TaskModal.jsx
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useParams } from "next/navigation";
@@ -9,9 +8,7 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
   const [taskData, setTaskData] = useState({});
   const params = useParams();
   const projectId = params?.projectId;
-  console.log("id:", id);
 
-  console.log("parans:", projectId);
   const capitalizeFirstLetter = (string) => {
     return string ? string.charAt(0).toUpperCase() + string.slice(1) : "";
   };
@@ -19,9 +16,9 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
   useEffect(() => {
     if (isOpen) {
       axios
-        .get(`/api/projects/${projectId}/tasks/${id.id}`) // note plural "tasks"
+        .get(`/api/projects/${projectId}/tasks/${id.id}`)
         .then((res) => {
-          setTaskData(res.data); // directly the task object
+          setTaskData(res.data);
         })
         .catch(() => {
           toast.error("Something went wrong");

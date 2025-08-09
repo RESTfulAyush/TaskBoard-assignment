@@ -15,12 +15,9 @@ export default function LoginPage() {
       body: JSON.stringify({ email, password }),
     });
 
-    console.log("email:", email);
-
     const data = await res.json();
 
     if (res.ok) {
-      console.log("res", res);
       localStorage.setItem("token", data.token);
       router.push("/projects");
     } else {
