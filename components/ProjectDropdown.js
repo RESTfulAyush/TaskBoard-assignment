@@ -5,16 +5,20 @@ import toast from "react-hot-toast";
 import AddProjectModal from "./AddProjectModal";
 
 const ProjectDropdown = ({ id, navigate }) => {
+  const token = localStorage.getItem("token");
+  console.log("id:", id);
   const [isModalOpen, setModalState] = useState(false);
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:9000/project/${id}`
-      );
-      if (response.data.deletedCount > 0) {
+      const response = await axios.delete(`/api/projects/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data.message === "Project deleted successfully") {
         toast.success("Record deleted successfully");
-        navigate("/");
+        navigate("/projects");
         document.dispatchEvent(new CustomEvent("projectUpdate"));
       } else {
         toast.error("Record is already deleted");

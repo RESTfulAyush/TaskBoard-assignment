@@ -67,7 +67,9 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
           >
             <Dialog.Panel className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6">
               <div className="flex justify-between items-center border-b pb-3">
-                <h1 className="text-xl font-semibold">Task Details</h1>
+                <h1 className="text-xl font-semibold text-gray-900 placeholder-gray-400">
+                  Task Details
+                </h1>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="text-gray-500 hover:bg-gray-200 rounded p-1 focus:ring-2 focus:ring-gray-300"
@@ -88,7 +90,7 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
               </div>
 
               <div className="mt-4 space-y-3">
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-2xl font-bold text-gray-900 placeholder-gray-400">
                   Title: {capitalizeFirstLetter(taskData.title)}
                 </h2>
                 <p className="text-gray-600">

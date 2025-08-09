@@ -55,7 +55,7 @@ const AddTaskModal = ({
       title,
       description: desc,
       priority,
-      ...(edit && { stage: status }), // only send stage on edit
+      ...(edit && { stage: status }),
     };
 
     try {
@@ -117,7 +117,7 @@ const AddTaskModal = ({
                   as="div"
                   className="bg-white shadow px-6 py-4 rounded-t-md sticky top-0 flex justify-between items-center"
                 >
-                  <h1 className="text-lg font-semibold">
+                  <h1 className="text-lg font-semibold text-gray-900 placeholder-gray-400">
                     {edit ? "Edit Task" : "Add Task"}
                   </h1>
                   <button
@@ -152,7 +152,7 @@ const AddTaskModal = ({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       type="text"
-                      className="border border-gray-300 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-none"
+                      className="border border-gray-300 text-gray-900 placeholder-gray-400 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-none"
                       placeholder="Task title"
                       required
                     />
@@ -168,7 +168,7 @@ const AddTaskModal = ({
                       id="description"
                       value={desc}
                       onChange={(e) => setDesc(e.target.value)}
-                      className="border border-gray-300 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-none"
+                      className="border border-gray-300 text-gray-900 placeholder-gray-400 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-none"
                       rows="6"
                       placeholder="Task description"
                       required
@@ -181,7 +181,7 @@ const AddTaskModal = ({
                         <button
                           key={level}
                           type="button"
-                          className={`px-4 py-2 rounded-md ${
+                          className={`px-4 py-2 rounded-md text-gray-900 placeholder-gray-400 ${
                             priority === level
                               ? level === "Low"
                                 ? "bg-green-500 text-white"
@@ -205,7 +205,7 @@ const AddTaskModal = ({
                       <select
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
-                        className="border border-gray-300 rounded-md w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-none"
+                        className="border border-gray-300 rounded-md text-gray-900 placeholder-gray-400 w-full text-sm py-2 px-2.5 focus:border-indigo-500 focus:outline-none"
                       >
                         <option value="To do">To do</option>
                         <option value="In Progress">In Progress</option>
